@@ -1,0 +1,4 @@
+build*
+GeneratedFiles
+.vs
+*.user
