@@ -11,7 +11,6 @@ protected:
     void dragLeaveEvent(QGraphicsSceneDragDropEvent *) Q_DECL_OVERRIDE;
     void dragMoveEvent(QGraphicsSceneDragDropEvent *) Q_DECL_OVERRIDE;
     void dropEvent(QGraphicsSceneDragDropEvent *) Q_DECL_OVERRIDE;
-
 };
 
 #endif // CUSTOMSCENE_H
