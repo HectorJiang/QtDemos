@@ -18,6 +18,8 @@ public:
 private slots:
     void on_m_pSliderOpacity_valueChanged(int value);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
