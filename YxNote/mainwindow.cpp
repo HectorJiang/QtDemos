@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QColorDialog>
+#include <QGraphicsOpacityEffect>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,7 +22,10 @@ void MainWindow::on_m_pSliderOpacity_valueChanged(int value)
 {
     qreal res = static_cast<qreal>(value)/10;
     qDebug()<<res;
-    setWindowOpacity(res);
+    QGraphicsOpacityEffect *pOpacityEffect = new QGraphicsOpacityEffect(this);
+    pOpacityEffect->setOpacity(res);
+    setGraphicsEffect(pOpacityEffect);
+//    setWindowOpacity(res);
 }
 
 void MainWindow::on_pushButton_clicked()

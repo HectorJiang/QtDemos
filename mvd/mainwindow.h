@@ -1,4 +1,4 @@
-﻿#ifndef MAINWINDOW_H
+#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -14,12 +14,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-
-private slots:
-    void on_m_pSliderOpacity_valueChanged(int value);
-
-    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
