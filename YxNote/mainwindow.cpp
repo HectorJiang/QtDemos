@@ -31,7 +31,9 @@ void MainWindow::on_m_pSliderOpacity_valueChanged(int value)
 void MainWindow::on_pushButton_clicked()
 {
    QColor color = QColorDialog::getColor(Qt::black, this);
-   QPalette pal = palette();
+   QPalette pal;
    pal.setColor(QPalette::Background, color);
    setPalette(pal);
+   ui->m_pLbColor->setPalette(pal);
+   ui->m_pLbColor->setAutoFillBackground(true);
 }

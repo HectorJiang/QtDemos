@@ -1,4 +1,4 @@
-#include "customscene.h"
+﻿#include "customscene.h"
 #include <QDebug>
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
