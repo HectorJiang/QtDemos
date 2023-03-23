@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QtNetwork>
@@ -9,8 +9,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     m_pNetWorkManager = new QNetworkAccessManager(this);
+    m_pSetting = new QSettings("config.ini", QSettings::IniFormat);
+    m_pConsoleLogger = spdlog::stdout_color_mt("console_logger");
+    m_pFileLogger = spdlog::basic_logger_mt("file_logger", "spd.log");
+    m_pConsoleLogger->info("test....");
+    m_pFileLogger->warn("fafdasfda");
+    connect(ui->m_pCheckBoxIsOpen, SIGNAL(stateChanged(int)), this, SLOT(checkStateIniSet(int)));
 //    connect(m_pNetWorkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetWorkReply*)));
     ui->m_pProDown->setValue(0);
+    initConfig();
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +38,13 @@ void MainWindow::startRequest(QUrl url)
    connect(m_pNetworkReply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
    connect(m_pNetworkReply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(updateDataReadProgress(qint64, qint64)));
    connect(m_pNetworkReply, SIGNAL(finished()), this, SLOT(httpFinished()));
+}
+
+void MainWindow::initConfig()
+{
+    bool compleleOpen = m_pSetting->value("Basic/complete_open").toBool();
+    qDebug()<<compleleOpen;
+    ui->m_pCheckBoxIsOpen->setChecked(compleleOpen);
 }
 
 void MainWindow::on_m_pBtnDown_clicked()
@@ -85,4 +99,12 @@ void MainWindow::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
     qDebug()<<"speed:"<<QString::number(speed, 'f', 2)<<"M/S"<<endl;
     ui->m_pProDown->setMaximum(totalBytes);
     ui->m_pProDown->setValue(bytesRead);
+}
+
+void MainWindow::checkStateIniSet(int state)
+{
+    qDebug()<<state;
+    bool compleleOpen = ui->m_pCheckBoxIsOpen->isChecked();
+    qDebug()<<compleleOpen;
+    m_pSetting->setValue("Basic/complete_open", compleleOpen);
 }

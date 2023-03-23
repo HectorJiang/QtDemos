@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     HWND hdesktop = findDesktopIconWnd();
-    WId wid = w.winId();
-    SetParent((HWND)wid, hdesktop);
+//    WId wid = w.winId();
+//    SetParent((HWND)wid, hdesktop);
     w.show();
     return a.exec();
 }

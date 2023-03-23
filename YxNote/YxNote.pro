@@ -17,13 +17,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    widgets/popup.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    widgets/popup.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    widgets/popup.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -32,4 +35,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 LIBS += -luser32
 
-RC_ICON = xinping.ico
+RC_ICON = jyx.ico

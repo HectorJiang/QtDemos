@@ -1,9 +1,15 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QFile>
 #include <QUrl>
+#include <QSettings>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
+
 //#include <QNetworkReply>
 
 QT_BEGIN_NAMESPACE
@@ -19,7 +25,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void startRequest(QUrl url);
-
+private:
+    void initConfig();
 private slots:
     void on_m_pBtnDown_clicked();
 
@@ -31,6 +38,7 @@ private slots:
     void httpFinished();
     void httpReadyRead();
     void updateDataReadProgress(qint64, qint64);
+    void checkStateIniSet(int state);
 
 private:
     QNetworkAccessManager *m_pNetWorkManager;
@@ -39,5 +47,8 @@ private:
     QFile *m_pFile;
     QUrl m_urlOpen;
     Ui::MainWindow *ui;
+    QSettings *m_pSetting;
+    std::shared_ptr<spdlog::logger> m_pConsoleLogger;
+    std::shared_ptr<spdlog::logger> m_pFileLogger;
 };
 #endif // MAINWINDOW_H
