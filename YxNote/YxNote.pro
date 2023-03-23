@@ -35,4 +35,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 LIBS += -luser32
 
-RC_ICON = jyx.ico
+RC_ICONS = jyx.ico

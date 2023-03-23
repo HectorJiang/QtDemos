@@ -8,8 +8,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
-
-
+#include <QSqlTableModel>
+#include <QSqlDatabase>
 //#include <QNetworkReply>
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +40,8 @@ private slots:
     void updateDataReadProgress(qint64, qint64);
     void checkStateIniSet(int state);
 
+    void on_m_pBtnClearRecord_clicked();
+
 private:
     QNetworkAccessManager *m_pNetWorkManager;
     QNetworkReply *m_pNetworkReply;
@@ -50,5 +52,7 @@ private:
     QSettings *m_pSetting;
     std::shared_ptr<spdlog::logger> m_pConsoleLogger;
     std::shared_ptr<spdlog::logger> m_pFileLogger;
+    QSqlTableModel *m_pModelSql;
+    QSqlDatabase m_db;
 };
 #endif // MAINWINDOW_H

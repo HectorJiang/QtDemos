@@ -3,6 +3,8 @@
 #include <QFileDialog>
 #include <QtNetwork>
 #include <QDesktopServices>
+#include <QStatusBar>
+#include <QSqlTableModel>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -13,7 +15,17 @@ MainWindow::MainWindow(QWidget *parent)
     m_pConsoleLogger = spdlog::stdout_color_mt("console_logger");
     m_pFileLogger = spdlog::basic_logger_mt("file_logger", "spd.log");
     m_pConsoleLogger->info("test....");
-    m_pFileLogger->warn("fafdasfda");
+//    m_pFileLogger->warn("fafdasfda");
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName("info.db");
+    if(!m_db.open()){
+        statusBar()->showMessage("open db error");
+        m_pFileLogger->error("open db error");
+    }
+    m_pModelSql = new QSqlTableModel(this, m_db);
+    m_pModelSql->setTable("download_record");
+    ui->tableView->setModel(m_pModelSql);
+    m_pModelSql->select();
     connect(ui->m_pCheckBoxIsOpen, SIGNAL(stateChanged(int)), this, SLOT(checkStateIniSet(int)));
 //    connect(m_pNetWorkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetWorkReply*)));
     ui->m_pProDown->setValue(0);
@@ -43,19 +55,22 @@ void MainWindow::startRequest(QUrl url)
 void MainWindow::initConfig()
 {
     bool compleleOpen = m_pSetting->value("Basic/complete_open").toBool();
-    qDebug()<<compleleOpen;
     ui->m_pCheckBoxIsOpen->setChecked(compleleOpen);
+    int threadNum = m_pSetting->value("Basic/thread_num").toInt();
+    ui->m_pSpinBoxThreadNum->setValue(threadNum);
 }
 
 void MainWindow::on_m_pBtnDown_clicked()
 {
     m_url = ui->m_pLeURL->text();
     QFileInfo info(m_url.path());
+//    if(ui->m_pLePath->text().isEmpty())
     QString strFilename = ui->m_pLePath->text()+"/"+info.fileName();
     m_pFile = new QFile(strFilename);
     m_urlOpen = QString("file:///"+strFilename);
     if(!m_pFile->open(QIODevice::WriteOnly)){
         qDebug()<<"file open error";
+        statusBar()->showMessage("file open error");
         delete m_pFile;
         m_pFile = nullptr;
         return;
@@ -73,7 +88,6 @@ void MainWindow::on_m_pBtnBrowse_clicked()
 void MainWindow::on_m_pBtnPause_clicked()
 {
 
-
 }
 
 void MainWindow::replyFinished(QNetworkReply *)
@@ -83,6 +97,7 @@ void MainWindow::replyFinished(QNetworkReply *)
 
 void MainWindow::httpFinished()
 {
+    statusBar()->showMessage(QStringLiteral("下载成功！！！"));
     if(ui->m_pCheckBoxIsOpen->isChecked()){
         QDesktopServices::openUrl(m_urlOpen);
     }
@@ -103,8 +118,16 @@ void MainWindow::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 
 void MainWindow::checkStateIniSet(int state)
 {
-    qDebug()<<state;
     bool compleleOpen = ui->m_pCheckBoxIsOpen->isChecked();
-    qDebug()<<compleleOpen;
     m_pSetting->setValue("Basic/complete_open", compleleOpen);
+}
+
+void MainWindow::on_m_pBtnClearRecord_clicked()
+{
+    QItemSelectionModel *pSelectModel = ui->tableView->selectionModel();
+    QModelIndexList list = pSelectModel->selectedRows();
+    for(auto &index:list){
+        m_pModelSql->removeRow(index.row());
+    }
+    m_pModelSql->select();
 }
